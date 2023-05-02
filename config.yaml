@@ -1,0 +1,12 @@
+provider: google
+
+dns:
+  - name: <subdomain or domain name>
+    ip: auto
+    username: <ddns_username>
+    password: <ddns_password>
+
+  - name: <subdomain or domain name>
+    ip: auto
+    username: <ddns_username>
+    password: <ddns_password>
