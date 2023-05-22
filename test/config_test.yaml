@@ -3,5 +3,5 @@ provider: google
 dns:
   - name: ddnstest.binhnguyen.dev
     ip: auto
-    username:
-    password:
+    username:   
+    password:   
