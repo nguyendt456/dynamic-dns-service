@@ -18,5 +18,8 @@ jobs:
           paths:
             - "/go/pkg/mod"
       - run:
+          name: Replace variable
+          command: sh ./test/replace_credentials.sh
+      - run:
           name: Run tests
           command: go test -v ./test
