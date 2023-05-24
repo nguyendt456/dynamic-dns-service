@@ -4,6 +4,7 @@ jobs:
     working_directory: ~/repo
     docker:
       - image: cimg/go:1.18
+        user: root
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
