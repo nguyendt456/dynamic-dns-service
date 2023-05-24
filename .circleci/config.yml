@@ -1,27 +1,28 @@
 version: 2.1
 jobs:
   build:
-    machine:
-      image: ubuntu-2004/202010-01
+    docker:
+      - image: cimg/go:1.20
+        user: root
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - go-mod-v4-{{ checksum "go.sum" }}
-      # - run:
-      #     name: Install Dependencies
-      #     command: go get ./...
-      # - save_cache:
-      #     key: go-mod-v4-{{ checksum "go.sum" }}
-      #     paths:
-      #       - "/go/pkg/mod"
-      # - run:
-      #     name: Replace variable
-      #     command: ./test/replace_credentials.sh
-      # - run:
-      #     name: Run tests
-      #     command: go test -v ./test
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: go get ./...
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run:
+          name: Replace variable
+          command: ./test/replace_credentials.sh
+      - run:
+          name: Run tests
+          command: go test -v ./test
       - run:
           name: Build and tag image 
           command: | 
