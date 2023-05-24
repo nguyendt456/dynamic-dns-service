@@ -25,11 +25,11 @@ jobs:
       - run:
           name: Build and tag image 
           command: | 
-            docker build . -t dynamic-dns-service:latest
-            docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
+            sudo docker build . -t dynamic-dns-service:latest
+            sudo docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
       - run:
           name: Login to docker registry
-          command: echo $REGISTRY_PASS | docker login --username $REGISTRY_USER --password-stdin
+          command: echo $REGISTRY_PASS | sudo docker login --username $REGISTRY_USER --password-stdin
       - run:
           name: Push image
-          command: docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
+          command: sudo docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
