@@ -25,3 +25,13 @@ Command line:
 `go build .`
 
 `./dynamic-dns-service`
+
+## Docker
+
+Pre-built image available on: `registry.binhnguyen.dev/public_project/dynamic-dns-service`
+
+Or build from command:
+
+`docker build .`
+
+`docker compose up -d`

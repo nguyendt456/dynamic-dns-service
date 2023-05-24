@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  dynamic-dns-service:
+    image: dynamic-dns-service:0.1.0
+    ports:
+      - 8080:8080
+    volumes:
+      - ./test/config_test.yaml:/app/config.yaml
