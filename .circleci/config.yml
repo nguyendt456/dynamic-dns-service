@@ -6,23 +6,9 @@ jobs:
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
-      - run: echo sudo > ~/sudo
-      # - restore_cache:
-      #     keys:
-      #       - go-mod-v4-{{ checksum "go.sum" }}
-      # - run:
-      #     name: Install Dependencies
-      #     command: go get ./...
-      # - save_cache:
-      #     key: go-mod-v4-{{ checksum "go.sum" }}
-      #     paths:
-      #       - "/go/pkg/mod"
-      # - run:
-      #     name: Replace variable
-      #     command: ./test/replace_credentials.sh
-      # - run:
-      #     name: Run tests
-      #     command: go test -v ./test
+      - run:
+          name: Sudo work-around 
+          command: echo sudo > ~/sudo
       - run:
           name: Build and tag image 
           command: | 
@@ -34,3 +20,36 @@ jobs:
       - run:
           name: Push image
           command: eval `cat ~/sudo` docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
+  test:
+    docker:
+      - image: cimg/go:1.20
+    resource_class: nguyendt456/popos-server
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: go get ./...
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run:
+          name: Replace variable
+          command: ./test/replace_credentials.sh
+      - run:
+          name: Run tests
+          command: go test -v ./test
+workflows:
+  test_and_build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
