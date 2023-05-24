@@ -1,35 +1,55 @@
 version: 2.1
 jobs:
   build:
-    docker:
-      - image: quay.io/buildah/stable
+    machine:
+      image: ubuntu-2204:2022.04.2
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - go-mod-v4-{{ checksum "go.sum" }}
-      # - run:
-      #     name: Install Dependencies
-      #     command: go get ./...
-      # - save_cache:
-      #     key: go-mod-v4-{{ checksum "go.sum" }}
-      #     paths:
-      #       - "/go/pkg/mod"
-      # - run:
-      #     name: Replace variable
-      #     command: ./test/replace_credentials.sh
-      # - run:
-      #     name: Run tests
-      #     command: go test -v ./test
+      - run:
+          name: Sudo work-around 
+          command: echo sudo > ~/sudo
       - run:
           name: Build and tag image 
           command: | 
-            buildah bud . -t dynamic-dns-service:latest
-            buildah tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
+            eval `cat ~/sudo` docker build . -t dynamic-dns-service:latest
+            eval `cat ~/sudo` docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
       - run:
           name: Login to docker registry
-          command: echo $REGISTRY_PASS | buildah login --username $REGISTRY_USER --password-stdin
+          command: echo $REGISTRY_PASS | eval `cat ~/sudo` docker login --username $REGISTRY_USER --password-stdin registry.binhnguyen.dev
       - run:
           name: Push image
-          command: buildah push registry.binhnguyen.dev/public_project/dynamic-dns-service
+          command: eval `cat ~/sudo` docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
+  test:
+    docker:
+      - image: cimg/go:1.20
+    resource_class: nguyendt456/popos-server
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: go get ./...
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run:
+          name: Replace variable
+          command: ./test/replace_credentials.sh
+      - run:
+          name: Run tests
+          command: go test -v ./test
+workflows:
+  test_and_build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
