@@ -22,24 +22,16 @@ jobs:
       - run:
           name: Run tests
           command: go test -v ./test
-      - run:
-          name: Use sudo docker in local builds
-          command: |
-            if [[ $CIRCLE_SHELL_ENV == *"localbuild"* ]]; then
-              echo "This is a local build. Enabling sudo for docker"
-              echo sudo > ~/sudo
-            else
-              echo "This is not a local build. Disabling sudo for docker"
-              touch ~/sudo
-            fi
+      - setup_remote_docker:
+          version: 20.10.14
       - run:
           name: Build and tag image 
           command: | 
-            eval `cat ~/sudo` docker build . -t dynamic-dns-service:latest
-            eval `cat ~/sudo` docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
+            docker build . -t dynamic-dns-service:latest
+            docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
       - run:
           name: Login to docker registry
-          command: echo $REGISTRY_PASS | eval `cat ~/sudo` docker login --username $REGISTRY_USER --password-stdin
+          command: echo $REGISTRY_PASS | docker login --username $REGISTRY_USER --password-stdin
       - run:
           name: Push image
-          command: eval `cat ~/sudo` docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
+          command: docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
