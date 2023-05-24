@@ -3,6 +3,7 @@ jobs:
   build:
     machine:
       image: ubuntu-2204:2022.04.2
+    user: root
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
