@@ -30,7 +30,7 @@ jobs:
             eval `cat ~/sudo` docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
       - run:
           name: Login to docker registry
-          command: echo $REGISTRY_PASS | eval `cat ~/sudo` docker login --username $REGISTRY_USER --password-stdin
+          command: echo $REGISTRY_PASS | eval `cat ~/sudo` docker login --username $REGISTRY_USER --password-stdin registry.binhnguyen.dev
       - run:
           name: Push image
           command: eval `cat ~/sudo` docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
