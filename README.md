@@ -9,12 +9,12 @@ Sample configuration for `config.yaml`:
 provider: google
 
 dns:
-  - name: seproject.makerzone.net
+  - name: domain or subdomain name
     ip: auto
     username: <username located dynamic dns section>
     password: <password located dynamic dns section>
 
-  - name: makerzone.net
+  - name: domain or subdomain name
     ip: auto
     username: <username located dynamic dns section>
     password: <password located dynamic dns section>
@@ -28,10 +28,10 @@ Command line:
 
 ## Docker
 
-Pre-built image available on: `registry.binhnguyen.dev/public_project/dynamic-dns-service`
+Pre-built image available on: `registry.binhnguyen.dev/public/dynamic-dns-service`
 
 Or build from command:
 
-`docker build .`
+`docker build .` or `docker pull registry.binhnguyen.dev/public/dynamic-dns-service`
 
 `docker compose up -d`
