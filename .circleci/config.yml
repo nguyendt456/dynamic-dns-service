@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/repo
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.19
         user: root
     resource_class: nguyendt456/popos-server
     steps:
@@ -25,7 +25,7 @@ jobs:
           name: Run tests
           command: go test -v ./test
       - run: |
-          echo "$REGISTRY_PASS" | docker login --username $REGISTRY_USER --password-stdin
+          echo "$REGISTRY_PASS" | sudo docker login --username $REGISTRY_USER --password-stdin
       - run:
           name: Build and tag image 
           command: docker build . -t dynamic-dns-service:latest | docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
