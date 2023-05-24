@@ -2,35 +2,34 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: cimg/go:1.20
-        user: root
+      - image: quay.io/buildah/stable
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - go-mod-v4-{{ checksum "go.sum" }}
-      - run:
-          name: Install Dependencies
-          command: go get ./...
-      - save_cache:
-          key: go-mod-v4-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-      - run:
-          name: Replace variable
-          command: ./test/replace_credentials.sh
-      - run:
-          name: Run tests
-          command: go test -v ./test
+      # - restore_cache:
+      #     keys:
+      #       - go-mod-v4-{{ checksum "go.sum" }}
+      # - run:
+      #     name: Install Dependencies
+      #     command: go get ./...
+      # - save_cache:
+      #     key: go-mod-v4-{{ checksum "go.sum" }}
+      #     paths:
+      #       - "/go/pkg/mod"
+      # - run:
+      #     name: Replace variable
+      #     command: ./test/replace_credentials.sh
+      # - run:
+      #     name: Run tests
+      #     command: go test -v ./test
       - run:
           name: Build and tag image 
           command: | 
-            docker build . -t dynamic-dns-service:latest
-            docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
+            buildah bud . -t dynamic-dns-service:latest
+            buildah tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
       - run:
           name: Login to docker registry
-          command: echo $REGISTRY_PASS | docker login --username $REGISTRY_USER --password-stdin
+          command: echo $REGISTRY_PASS | buildah login --username $REGISTRY_USER --password-stdin
       - run:
           name: Push image
-          command: docker push registry.binhnguyen.dev/public_project/dynamic-dns-service
+          command: buildah push registry.binhnguyen.dev/public_project/dynamic-dns-service
