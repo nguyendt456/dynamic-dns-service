@@ -3,7 +3,6 @@ jobs:
   build:
     docker:
       - image: cimg/go:1.19
-      user: root
     resource_class: nguyendt456/popos-server
     steps:
       - checkout
