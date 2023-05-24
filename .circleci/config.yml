@@ -23,6 +23,12 @@ jobs:
           name: Run tests
           command: go test -v ./test
       - run:
+          name: Use sudo docker in local builds
+          command: |
+            if [[ $CIRCLE_SHELL_ENV == *"localbuild"* ]]; then
+              sudo chmod u+s $(which docker)
+            fi
+      - run:
           name: Build and tag image 
           command: docker build . -t dynamic-dns-service:latest | docker tag dynamic-dns-service:latest registry.binhnguyen.dev/public_project/dynamic-dns-service
       - run:
