@@ -2,8 +2,9 @@ version: '3'
 
 services:
   dynamic-dns-service:
-    image: dynamic-dns-service:0.1.0
+    container_name: dynamic-dns-service
+    build: .
     ports:
       - 8080:8080
     volumes:
-      - ./test/config_test.yaml:/app/config.yaml
+      - ./config.yaml:/app/config.yaml
