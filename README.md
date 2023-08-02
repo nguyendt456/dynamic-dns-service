@@ -28,10 +28,6 @@ Command line:
 
 ## Docker
 
-Pre-built image available on: `registry.binhnguyen.dev/public/dynamic-dns-service`
+Run the following command (`-d` for running container in the background):
 
-Or build from command:
-
-`docker build .` or `docker pull registry.binhnguyen.dev/public/dynamic-dns-service`
-
-`docker compose up -d`
+`docker compose up --build -d`
